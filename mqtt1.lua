@@ -1,12 +1,12 @@
 
 module(...,package.seeall)
 
-require"misc"
-require"mqtt"
-require"ntp"
+require "misc"
+require "mqtt"
+require "ntp"
 ntp.timeSync()
-require"gps1"
-require"uart1"
+require "uart1"
+require "gps1"
 
 local ready = false
 local lon_tmp1=""
@@ -127,6 +127,7 @@ function f_mqtt()
 						count_bat=count_bat+1
 					end 
 				end
+				uart1.packParm()
 				uart1.write_cmd('p0.imei.txt="' .. imei ..'"')
 				sys.wait(10000)
             end 

@@ -15,6 +15,9 @@ local air800_always_online = 1
 --local OFFTIME = 10	--air不放电关机倒计时 单位0.5min
 --local OFFCurrent = 20  --总电流单位0.1A  充放电单位0.01A    0.2A关机 0.3A不关机
 
+bak_str_setpm = "666666"     --参数设置值
+reply_receiv = 0       --设置成功 0 空闲 1收到参数设置并发给STM32 2设置成功
+
 
 --g_bat["using"] = OFFTIME	--电池开机第一次air800不关机时间，单位0.5分钟
 
@@ -160,7 +163,7 @@ local function parse(data)
 	end --end of if tailidx
 	
 	------------------------------	
-	--[[有头1f 有尾f1f1f1f1
+	--有头1f 有尾f1f1f1f1
 	tailidx = string.find(data,string.char(0xF1,0xF1,0xF1,0xF1)) 
 	if tailidx then
 		headidx = string.find(data,string.char(0x1F,0x1F,0x1F,0x1F))  --起始标志 1f 1f 1f 1f
@@ -176,7 +179,7 @@ local function parse(data)
 					table.insert( g_bat["parm"], string.byte(data,i) )
 				end			
 				g_bat["parmnew"] = true
-				mqtt1.pubParmMsg()
+				--mqtt1.pubParmMsg()
 				return string.sub(data, tailidx+1, -1),true  --数据串处理完后，下移处理
 			else 
 				headidx = string.find(data,string.char(0x1F,0x1F,0x1F,0x1F),headidx+1)
@@ -201,7 +204,7 @@ local function parse(data)
 		write_cmd('run_info.run_t15.txt="reply_receiv 2"')
 		return string.sub(data, tailidx+1, -1),true
 	end --end of if tailidx
-	]]	
+		
 	------------------------------		
 	--有头无尾 等待后续数据
 	return data,false
@@ -403,6 +406,26 @@ function packBAT()
     return buf
 end
 
+function packParm()
+	local datas={}
+	if g_bat["parmnew"] == true then		--如果设置参数parm有更新 那么上传parminfo配置参数信息
+		g_bat["parmnew"]= false
+		parm_tab = { id = "parm_info", datapoints = 
+			{{	at 	= g_bat["time"], 
+				value = { parm = g_bat["parm"] }
+			}}
+		}
+		table.insert(datas, parm_tab)
+	end	
+	if table.getn(datas)==0 then return end 
+	local send_tab =  { datastreams = datas }
+	local msg = json.encode(send_tab)
+--  local msg = "{\"datastreams\":[{\"id\":\"temperature\",\"datapoints\":[{\"at\":\"\",\"value\":40}]}]}"
+	local len_l, len_h = msg.len(msg) % 256, msg.len(msg) / 256
+	local buf2
+	buf2 = pack.pack("bbbA", 0x01,len_h,len_l,msg)
+--	mqttclient:publish("$dp",buf2,0)	
+end
 
 
 --保持系统处于唤醒状态，此处只是为了测试需要，所以此模块没有地方调用pm.sleep("testUart")休眠，不会进入低功耗休眠状态

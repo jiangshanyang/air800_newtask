@@ -67,21 +67,22 @@ PROT,ADDR,PORT = "tcp","183.230.40.39",6002	--onenet 服务器
 --DEVC_ID = "531387609"  
 --PASSWD ="C=4l6A3Tgrmt=px2nN6JGPfzPXI="
 
---PROD_ID = "205102"
---DEVC_ID = "531681735"  
---PASSWD ="C=4l6A3Tgrmt=px2nN6JGPfzPXI="
+PROD_ID = "205102"
+DEVC_ID = "862285034755953"     --电池测试盒子
+PASSWD ="C=4l6A3Tgrmt=px2nN6JGPfzPXI="
 
 
 --PROD_ID = "159104"
 --DEVC_ID = "36850392"  ---868575028775379 vsim1 jsy 
 --PASSWD ="DYfb5Vot9m1VU1d2LVKNCZtOdzU="
 
-PROD_ID = "159104"
-DEVC_ID = "525793431"  ---862285034755953 JSDZ179 
-PASSWD ="DYfb5Vot9m1VU1d2LVKNCZtOdzU="
+--PROD_ID = "159104"
+--DEVC_ID = "525793431"  ---862285034755953 JSDZ179 
+--PASSWD ="DYfb5Vot9m1VU1d2LVKNCZtOdzU="   -----Master-APIkey
 
 
 require "mqtt1"
+
 ------------------------
 sys.init(0,0)
 sys.run()

@@ -5,6 +5,10 @@ require"gps"
 require"agps"
 require"lbsLoc"
 require"common"
+require "misc"
+require "mqtt"
+require "ntp"
+ntp.timeSync()
 
 local Rlat = ""
 local Rlng = ""
@@ -130,12 +134,3 @@ function packGPS()
     return buf
 end
 
-sys.taskInit(
-	function()
-		while true do
-			uart1.write_cmd('main.gps_st.txt=" ' .. g_bat["satenum"] .. ' "')
-			uart1.write_cmd('main.gprs_st.txt=" ' .. net.getRssi() .. ' "')
-			sys.wait(30000)
-		end
-	end
-)
