@@ -127,7 +127,39 @@ function f_mqtt()
 						count_bat=count_bat+1
 					end 
 				end
-				uart1.packParm()
+				
+				local buf3=uart1.packParm()
+				if buf3~="" then
+					log.info("Parm buf3",buf3)
+					if true  then  
+						log.info("PARM send to onenet!",buf3)
+						result = mqttClient:publish("$dp",buf3)
+						if result then
+							log.info("PARM onenet send","success")
+							uart1.write_cmd('p0.cmd.txt="send PARM ok!"')
+						else
+							log.info("PARM onenet send","failed")
+							uart1.write_cmd('p0.cmd.txt="PARM onenet send failed"')
+							mqttClient:disconnect()
+							while not socket.isReady() do 
+								sys.waitUntil("IP_READY_IND") 
+								log.info("jiangshanyang","mqtt_PARM")
+							end
+							mqttClient = mqtt.client(DEVC_ID,300,PROD_ID,PASSWD)
+							while not mqttClient:connect(ADDR,PORT,PROT--[[,{caCert="ca.crt"}]]) do
+								sys.wait(2000)
+								log.info("jiangshanyang","mqtt_PARM")
+							end
+							log.info("jiangshanyang","mqtt_PARM")
+							mqttClient:publish("$dp",buf3)
+						end
+					else 
+						log.info("PARM not send to onenet!buf3=",buf3)
+					end 
+				end				
+				
+				
+				
 				uart1.write_cmd('p0.imei.txt="' .. imei ..'"')
 				sys.wait(10000)
             end 

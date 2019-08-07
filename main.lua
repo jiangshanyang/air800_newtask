@@ -68,7 +68,7 @@ PROT,ADDR,PORT = "tcp","183.230.40.39",6002	--onenet 服务器
 --PASSWD ="C=4l6A3Tgrmt=px2nN6JGPfzPXI="
 
 PROD_ID = "205102"
-DEVC_ID = "862285034755953"     --电池测试盒子
+DEVC_ID = "539637391"     --电池测试盒子
 PASSWD ="C=4l6A3Tgrmt=px2nN6JGPfzPXI="
 
 

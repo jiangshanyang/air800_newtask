@@ -360,7 +360,7 @@ function packBAT()
 				  --Ah_left = g_bat["Ah_left"]/10 ..'.'..  g_bat["Ah_left"]%10,
 				  Ah_left = g_bat["Ah_left"]/10 ,
 				  percent_left = g_bat["percent_left"],
-				  T_max = g_bat["T_max"],
+				  --T_max = g_bat["T_max"],
 				  Power = g_bat["Power"],
 				  --V_total = g_bat["V_total"]/10 ..'.'.. g_bat["V_total"]%10,
 				  --I_total = g_bat["I_total"]/10 ..'.'.. g_bat["I_total"]%10,
@@ -416,15 +416,16 @@ function packParm()
 			}}
 		}
 		table.insert(datas, parm_tab)
+	else
+		return ""
 	end	
-	if table.getn(datas)==0 then return end 
+--	if table.getn(datas)==0 then  end 
 	local send_tab =  { datastreams = datas }
 	local msg = json.encode(send_tab)
 --  local msg = "{\"datastreams\":[{\"id\":\"temperature\",\"datapoints\":[{\"at\":\"\",\"value\":40}]}]}"
 	local len_l, len_h = msg.len(msg) % 256, msg.len(msg) / 256
-	local buf2
-	buf2 = pack.pack("bbbA", 0x01,len_h,len_l,msg)
---	mqttclient:publish("$dp",buf2,0)	
+	local buf = pack.pack("bbbA", 0x01,len_h,len_l,msg)
+	return buf
 end
 
 
