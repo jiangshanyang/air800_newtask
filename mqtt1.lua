@@ -12,11 +12,11 @@ local ready = false
 local lon_tmp1=""
 local lat_tmp1=""
 local lon_tmp,lat_tmp
-local count_gps=0 --GPSÀÛ¼Æ¶àÉÙ´ÎÑÓ³ÙÃ»ÓĞ·¢ËÍ
-local count_bat=0 --µç³ØÊı¾İÀÛ¼Æ¶àÉÙ´ÎÑÓ³ÙÃ»ÓĞ·¢ËÍ
+local count_gps=0 --GPSç´¯è®¡å¤šå°‘æ¬¡å»¶è¿Ÿæ²¡æœ‰å‘é€
+local count_bat=0 --ç”µæ± æ•°æ®ç´¯è®¡å¤šå°‘æ¬¡å»¶è¿Ÿæ²¡æœ‰å‘é€
 
---- MQTTÁ¬½ÓÊÇ·ñ´¦ÓÚ¼¤»î×´Ì¬
--- @return ¼¤»î×´Ì¬·µ»Øtrue£¬·Ç¼¤»î×´Ì¬·µ»Øfalse
+--- MQTTè¿æ¥æ˜¯å¦å¤„äºæ¿€æ´»çŠ¶æ€
+-- @return æ¿€æ´»çŠ¶æ€è¿”å›trueï¼Œéæ¿€æ´»çŠ¶æ€è¿”å›false
 -- @usage mqttTask.isReady()
 --[[
 function isReady()
@@ -26,40 +26,40 @@ end]]
 
 
 
---ntp.timeSync(8)  --8Ğ¡Ê±Í¬²½Ò»´ÎÊ±ÖÓ
---sys.timerLoopStart(sys.restart('Ã¿24Ğ¡Ê±Èí¼şÖØÆô£¬every 24 hours to software reboot',86400000))
+--ntp.timeSync(8)  --8å°æ—¶åŒæ­¥ä¸€æ¬¡æ—¶é’Ÿ
+--sys.timerLoopStart(sys.restart('æ¯24å°æ—¶è½¯ä»¶é‡å¯ï¼Œevery 24 hours to software reboot',86400000))
 
 function f_mqtt()
         while true do
-			--µÈ´ıÍøÂç»·¾³×¼±¸¾ÍĞ÷
+			--ç­‰å¾…ç½‘ç»œç¯å¢ƒå‡†å¤‡å°±ç»ª
 			while not socket.isReady() do sys.waitUntil("IP_READY_IND") end
 			local imei = misc.getImei()
-			--´´½¨Ò»¸öMQTT¿Í»§¶Ë
+			--åˆ›å»ºä¸€ä¸ªMQTTå®¢æˆ·ç«¯
 			local mqttClient = mqtt.client(DEVC_ID,300,PROD_ID,PASSWD)
-			--×èÈûÖ´ĞĞMQTT CONNECT¶¯×÷£¬Ö±ÖÁ³É¹¦
-			--Èç¹ûÊ¹ÓÃsslÁ¬½Ó£¬´ò¿ª--[[,{caCert="ca.crt"}]]£¬¸ù¾İ×Ô¼ºµÄĞèÇóÅäÖÃ
+			--é˜»å¡æ‰§è¡ŒMQTT CONNECTåŠ¨ä½œï¼Œç›´è‡³æˆåŠŸ
+			--å¦‚æœä½¿ç”¨sslè¿æ¥ï¼Œæ‰“å¼€--[[,{caCert="ca.crt"}]]ï¼Œæ ¹æ®è‡ªå·±çš„éœ€æ±‚é…ç½®
 			while not mqttClient:connect(ADDR,PORT,PROT--[[,{caCert="ca.crt"}]]) do
 				sys.wait(1000)
 			end
 			uart1.write_cmd('p0.cmd.txt="connect ok"')
             while true do
             	local buf1=gps1.packGPS()
-				local label=0  --±êÖ¾ÊÇ·ñÓĞ¶¨Î»Êı¾İ,0Ã»ÓĞ¶¨Î»Êı¾İ£¬1£¬ÓĞÒ»¸ö¶¨Î»Êı¾İ£¬2£ºÓĞ¶ş¸ö¶¨Î»Êı¾İ
+				local label=0  --æ ‡å¿—æ˜¯å¦æœ‰å®šä½æ•°æ®,0æ²¡æœ‰å®šä½æ•°æ®ï¼Œ1ï¼Œæœ‰ä¸€ä¸ªå®šä½æ•°æ®ï¼Œ2ï¼šæœ‰äºŒä¸ªå®šä½æ•°æ®
 				if gps1.Mlat~=nil and  lat_tmp1~=""  then
 					label=2
-					lon_tmp=math.ceil(math.abs(tonumber(lon_tmp1)-tonumber(gps1.Mlng))*100000)  ---¼ÆËã´ó¸Å¶àÉÙÃ×µÄ¾àÀë   
+					lon_tmp=math.ceil(math.abs(tonumber(lon_tmp1)-tonumber(gps1.Mlng))*100000)  ---è®¡ç®—å¤§æ¦‚å¤šå°‘ç±³çš„è·ç¦»   
 					lat_tmp=math.ceil(math.abs(tonumber(lat_tmp1)-tonumber(gps1.Mlat))*100000)
 				end
 				if gps1.Mlat~=nil and lat_tmp1=="" then
 					label=1
 				end
-				--GPS¶¨Î»Èç¹û±ä»¯²»³¬¹ı20Ã×£¬LBS¶¨Î»±ä»¯²»³¬¹ı100Ã×£¬²»ÖØĞÂ·¢¶¨Î»ĞÅÏ¢µ½·şÎñÆ÷ÉÏ,lon_tmp1ÊÇÇ°ÃæµÄÊı¾İ,MlngÊÇµ±Ç°µÄÊı¾İ
+				--GPSå®šä½å¦‚æœå˜åŒ–ä¸è¶…è¿‡20ç±³ï¼ŒLBSå®šä½å˜åŒ–ä¸è¶…è¿‡100ç±³ï¼Œä¸é‡æ–°å‘å®šä½ä¿¡æ¯åˆ°æœåŠ¡å™¨ä¸Š,lon_tmp1æ˜¯å‰é¢çš„æ•°æ®,Mlngæ˜¯å½“å‰çš„æ•°æ®
 				log.info("label,count_gps",tostring(label),tostring(count_gps))
 				log.info("lon_tmp1,Mlng,lat_tmp1,Mlat,tostring(lon_tmp),tostring(lat_tmp):",lon_tmp1,gps1.Mlng,lat_tmp1,gps1.Mlat,tostring(lon_tmp),tostring(lat_tmp))
             	if label==1 or (label==2 and buf1 ~= "" and (
-					(string.len(gps1.Mlat)==10 and (lon_tmp+lat_tmp)>50 and (lon_tmp+lat_tmp)<2000 )   --GPS¶¨Î»¸Ä±äµÄ¾àÀë
-					or (string.len(gps1.Mlat)==11 and (lon_tmp+lat_tmp)>200 and (lon_tmp+lat_tmp)<10000 )  --LBS¶¨Î»¸Ä±äµÄ¾àÀë
-					or count_gps>360  --Á¬Ğø1¸öĞ¡Ê±Î»ÖÃ²»±ä£¬Ò²·¢ËÍÒ»´Î¶¨Î»Êı¾İ
+					(string.len(gps1.Mlat)==10 and (lon_tmp+lat_tmp)>50 and (lon_tmp+lat_tmp)<2000 )   --GPSå®šä½æ”¹å˜çš„è·ç¦»
+					or (string.len(gps1.Mlat)==11 and (lon_tmp+lat_tmp)>200 and (lon_tmp+lat_tmp)<10000 )  --LBSå®šä½æ”¹å˜çš„è·ç¦»
+					or count_gps>360  --è¿ç»­1ä¸ªå°æ—¶ä½ç½®ä¸å˜ï¼Œä¹Ÿå‘é€ä¸€æ¬¡å®šä½æ•°æ®
 					)) then  
 				    log.info("gps/lbs send to onenet!",lon_tmp1,gps1.Mlng,lat_tmp1,gps1.Mlat,tostring(lon_tmp),tostring(lat_tmp))
 					result = mqttClient:publish("$dp",buf1)
@@ -97,7 +97,7 @@ function f_mqtt()
 					local I_tmp=g_bat["I_total"]/10
 					log.info("Bat buf2",buf2)
 					log.info("count_bat",tostring(count_bat))
-					-- Òì³£Çé¿ö»ò¸ßÎÂ³¬¹ı60¶È»òµçÁ÷´óÓÚ50£¬Ã¿10ÃëÖÓ·¢Ò»´Î£¬Õı³£Çé¿öµçÁ÷1-50Ö®¼ä£¬Ã¿Ò»·ÖÖÓ·¢Ò»´Î£¬Õı³£Çé¿öÇÒµçÁ÷Ğ¡ÓÚ1,5·ÖÖÓ·¢Ò»´Îµç³ØÊı¾İ
+					-- å¼‚å¸¸æƒ…å†µæˆ–é«˜æ¸©è¶…è¿‡60åº¦æˆ–ç”µæµå¤§äº50ï¼Œæ¯10ç§’é’Ÿå‘ä¸€æ¬¡ï¼Œæ­£å¸¸æƒ…å†µç”µæµ1-50ä¹‹é—´ï¼Œæ¯ä¸€åˆ†é’Ÿå‘ä¸€æ¬¡ï¼Œæ­£å¸¸æƒ…å†µä¸”ç”µæµå°äº1,5åˆ†é’Ÿå‘ä¸€æ¬¡ç”µæ± æ•°æ®
 					--if g_bat["cntl_x"]~=208 or g_bat["warn_x"]~=0 or I_tmp>50 or g_bat["T_max"]>60 or (I_tmp>=1 and count_bat>6) or (I_tmp<1 and count_bat>360) then  
 					if buf2~=""  then  
 						log.info("BAT send to onenet!",buf2)
@@ -130,9 +130,9 @@ function f_mqtt()
 				uart1.write_cmd('p0.imei.txt="' .. imei ..'"')
 				sys.wait(10000)
             end 
-            --¶Ï¿ªMQTTÁ¬½Ó
+            --æ–­å¼€MQTTè¿æ¥
             mqttClient:disconnect()
         end 
     end
---Æô¶¯MQTT¿Í»§¶ËÈÎÎñ
+--å¯åŠ¨MQTTå®¢æˆ·ç«¯ä»»åŠ¡
 sys.taskInit(f_mqtt)

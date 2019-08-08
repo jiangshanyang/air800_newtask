@@ -9,9 +9,9 @@ require"common"
 local Rlat = ""
 local Rlng = ""
 --[[
-¹¦ÄÜ  £º·¢ËÍ²éÑ¯Î»ÖÃÇëÇó
-²ÎÊý  £ºÎÞ
-·µ»ØÖµ£ºÎÞ
+åŠŸèƒ½  ï¼šå‘é€æŸ¥è¯¢ä½ç½®è¯·æ±‚
+å‚æ•°  ï¼šæ— 
+è¿”å›žå€¼ï¼šæ— 
 ]]
 local function reqLbsLoc()
     reqAddr = not reqAddr
@@ -19,17 +19,17 @@ local function reqLbsLoc()
 end
 
 --[[
-¹¦ÄÜ  £º»ñÈ¡»ùÕ¾¶ÔÓ¦µÄ¾­Î³¶ÈºóµÄ»Øµ÷º¯Êý
-²ÎÊý  £º
-		result£ºnumberÀàÐÍ£¬0±íÊ¾³É¹¦£¬1±íÊ¾ÍøÂç»·¾³ÉÐÎ´¾ÍÐ÷£¬2±íÊ¾Á¬½Ó·þÎñÆ÷Ê§°Ü£¬3±íÊ¾·¢ËÍÊý¾ÝÊ§°Ü£¬4±íÊ¾½ÓÊÕ·þÎñÆ÷Ó¦´ð³¬Ê±£¬5±íÊ¾·þÎñÆ÷·µ»Ø²éÑ¯Ê§°Ü£»Îª0Ê±£¬ºóÃæµÄ3¸ö²ÎÊý²ÅÓÐÒâÒå
-		lat£ºstringÀàÐÍ£¬Î³¶È£¬ÕûÊý²¿·Ö3Î»£¬Ð¡Êý²¿·Ö7Î»£¬ÀýÈç031.2425864
-		lng£ºstringÀàÐÍ£¬¾­¶È£¬ÕûÊý²¿·Ö3Î»£¬Ð¡Êý²¿·Ö7Î»£¬ÀýÈç121.4736522
-		addr£ºstringÀàÐÍ£¬UCS2´ó¶Ë±àÂëµÄÎ»ÖÃ×Ö·û´®¡£µ÷ÓÃlbsLoc.requestÊ±´«ÈëµÄµÚ¶þ¸ö²ÎÊýÎªtrueÊ±£¬²Å·µ»Ø±¾²ÎÊý
-·µ»ØÖµ£ºÎÞ
+åŠŸèƒ½  ï¼šèŽ·å–åŸºç«™å¯¹åº”çš„ç»çº¬åº¦åŽçš„å›žè°ƒå‡½æ•°
+å‚æ•°  ï¼š
+		resultï¼šnumberç±»åž‹ï¼Œ0è¡¨ç¤ºæˆåŠŸï¼Œ1è¡¨ç¤ºç½‘ç»œçŽ¯å¢ƒå°šæœªå°±ç»ªï¼Œ2è¡¨ç¤ºè¿žæŽ¥æœåŠ¡å™¨å¤±è´¥ï¼Œ3è¡¨ç¤ºå‘é€æ•°æ®å¤±è´¥ï¼Œ4è¡¨ç¤ºæŽ¥æ”¶æœåŠ¡å™¨åº”ç­”è¶…æ—¶ï¼Œ5è¡¨ç¤ºæœåŠ¡å™¨è¿”å›žæŸ¥è¯¢å¤±è´¥ï¼›ä¸º0æ—¶ï¼ŒåŽé¢çš„3ä¸ªå‚æ•°æ‰æœ‰æ„ä¹‰
+		latï¼šstringç±»åž‹ï¼Œçº¬åº¦ï¼Œæ•´æ•°éƒ¨åˆ†3ä½ï¼Œå°æ•°éƒ¨åˆ†7ä½ï¼Œä¾‹å¦‚031.2425864
+		lngï¼šstringç±»åž‹ï¼Œç»åº¦ï¼Œæ•´æ•°éƒ¨åˆ†3ä½ï¼Œå°æ•°éƒ¨åˆ†7ä½ï¼Œä¾‹å¦‚121.4736522
+		addrï¼šstringç±»åž‹ï¼ŒUCS2å¤§ç«¯ç¼–ç çš„ä½ç½®å­—ç¬¦ä¸²ã€‚è°ƒç”¨lbsLoc.requestæ—¶ä¼ å…¥çš„ç¬¬äºŒä¸ªå‚æ•°ä¸ºtrueæ—¶ï¼Œæ‰è¿”å›žæœ¬å‚æ•°
+è¿”å›žå€¼ï¼šæ— 
 ]]
 function getLocCb(result,lat,lng,addr)
     --log.info("testLbsLoc.getLocCb",result,lat,lng,result==0 and common.ucs2beToGb2312(addr) or "")
-    --»ñÈ¡¾­Î³¶È³É¹¦
+    --èŽ·å–ç»çº¬åº¦æˆåŠŸ
     if result==0 then
     	Rlat = lat
     	Rlng = lng
@@ -74,14 +74,14 @@ local function test1Cb(tag)
 end
 
 
---ÉèÖÃGPS+BD¶¨Î»
---Èç¹û²»µ÷ÓÃ´Ë½Ó¿Ú£¬Ä¬ÈÏÒ²ÎªGPS+BD¶¨Î»
+--è®¾ç½®GPS+BDå®šä½
+--å¦‚æžœä¸è°ƒç”¨æ­¤æŽ¥å£ï¼Œé»˜è®¤ä¹Ÿä¸ºGPS+BDå®šä½
 --gps.setAerialMode(1,1,0,0)
 
---ÉèÖÃ½ögps.luaÄÚ²¿´¦ÀíNEMAÊý¾Ý
---Èç¹û²»µ÷ÓÃ´Ë½Ó¿Ú£¬Ä¬ÈÏÒ²Îª½ögps.luaÄÚ²¿´¦ÀíNEMAÊý¾Ý
---Èç¹ûgps.luaÄÚ²¿²»´¦Àí£¬°ÑNMEAÊý¾ÝÍ¨¹ý»Øµ÷º¯ÊýcbÌá¹©¸øÍâ²¿³ÌÐò´¦Àí£¬²ÎÊýÉèÖÃÎª1,nmeaCb
---Èç¹ûgps.luaºÍÍâ²¿³ÌÐò¶¼´¦Àí£¬²ÎÊýÉèÖÃÎª2,nmeaCb
+--è®¾ç½®ä»…gps.luaå†…éƒ¨å¤„ç†NEMAæ•°æ®
+--å¦‚æžœä¸è°ƒç”¨æ­¤æŽ¥å£ï¼Œé»˜è®¤ä¹Ÿä¸ºä»…gps.luaå†…éƒ¨å¤„ç†NEMAæ•°æ®
+--å¦‚æžœgps.luaå†…éƒ¨ä¸å¤„ç†ï¼ŒæŠŠNMEAæ•°æ®é€šè¿‡å›žè°ƒå‡½æ•°cbæä¾›ç»™å¤–éƒ¨ç¨‹åºå¤„ç†ï¼Œå‚æ•°è®¾ç½®ä¸º1,nmeaCb
+--å¦‚æžœgps.luaå’Œå¤–éƒ¨ç¨‹åºéƒ½å¤„ç†ï¼Œå‚æ•°è®¾ç½®ä¸º2,nmeaCb
 -- gps.setNmeaMode(2,nmeaCb)
 
 -- test(testIdx)
